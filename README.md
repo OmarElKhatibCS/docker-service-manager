@@ -4,7 +4,7 @@ a simple gnome 40 extention that will start and stop docker service instead of m
 after cloning the repo open terminal in repo folder 
 
 ```bash
-gnome-extensions pack
+gnome-extensions pack --extra-source icons
 ```
 this will produce an `zip` file with name `docker-servic-manager@elkhatib.omar.com.shell-extension.zip` , after that  run
 ```bash
