@@ -1,0 +1,8 @@
+{
+  "name": "docker-service-manager",
+  "description": "This will help you run and turn off docker service from gnome panel",
+  "uuid": "docker-servic-manager@elkhatib.omar.com",
+  "shell-version": [
+    "40"
+  ]
+}
