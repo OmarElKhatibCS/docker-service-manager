@@ -38,40 +38,32 @@ class Indicator extends PanelMenu.Button {
     _init() {
         super._init(0.0, _('My Shiny Indicator'));
 
-		let gicon = Gio.icon_new_for_string(Me.path + "/icons/docker.png");
+	let gicon = Gio.icon_new_for_string(Me.path + "/icons/docker.png");
 
         this.add_child(new St.Icon({gicon}));
 
         let startDocker = new PopupMenu.PopupMenuItem(_('Start Docker'));
-        startDocker.connect('button_press_event', async () => {
-			const args = ['systemctl', 'start', 'docker'];
-			try {
-				execCommand(args).then( () => {
-					Main.notify(_('Docker Secrvice Started.'));
-				})
-			} catch(e) {
-				Main.notify(_('Error happened on start!'));
-			}
-		});
+	let stopDocker = new PopupMenu.PopupMenuItem(_('Stop Docker'));
 
-		let stopDocker = new PopupMenu.PopupMenuItem(_('Stop Docker'));
-		stopDocker.connect('button_press_event', async () => {
-			const args = ['systemctl', 'stop', 'docker.socket'];
-			try {
-				execCommand(args).then( () => {
-					Main.notify(_('Docker Secrvice Stoped.'));
-				})
-			} catch(e) {
-				Main.notify(_('Error happened on stop!'));
-			}
-		});
+	startDocker.connect('button_press_event', async () => execCommandAndNotify(['systemctl','start','docker'],'Docker service started!'));
+	stopDocker.connect('button_press_event', async () => execCommandAndNotify(['systemctl','stop','docker.socket'],'Docker service stoped!'));
 
         this.menu.addMenuItem(startDocker);
         this.menu.addMenuItem(stopDocker);
     }
 });
 
-function execCommand(args) {
+const execCommandAndNotify = (args , msg) => {
+	try {
+		execCommand(args).then( () => {
+			Main.notify(msg);
+		})
+	} catch(e) {
+		Main.notify(e);
+	}
+}
+
+const execCommand = (args) => {
     let proc = Gio.Subprocess.new(
         ['pkexec'].concat(args),
         Gio.SubprocessFlags.STDOUT_PIPE | Gio.SubprocessFlags.STDIN_PIPE
@@ -88,7 +80,6 @@ function execCommand(args) {
         });
     });
 }
-
 
 class Extension {
     constructor(uuid) {
